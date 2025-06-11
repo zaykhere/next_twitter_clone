@@ -1,0 +1,7 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Thick, block-like Z -->
+    <path d="M48 48H208V80H48V48ZM48 208V176H208V208H48ZM208 80L48 176" 
+          stroke="white" 
+          stroke-width="16" 
+          stroke-linecap="square"/>
+</svg>
