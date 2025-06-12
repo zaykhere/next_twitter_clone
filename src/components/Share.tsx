@@ -107,7 +107,7 @@ const Share = () => {
         <input type="text" name='desc' placeholder='What is happening?!'
           className='bg-transparent outline-none placeholder:text-textGray text-xl' autoComplete="off" autoCorrect="off" />
         {/* preview image  */}
-        {previewUrl && (
+        {previewUrl && media?.type.includes("image") && (
           <div className='relative rounded-xl overflow-hidden'>
             <Image src={previewUrl} alt='preview post image' width={600} height={600} className={`w-full ${settings.type === "original"
               ? "h-full object-contain"
@@ -118,6 +118,22 @@ const Share = () => {
             <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
               onClick={() => setIsEditorOpen(true)}>
               Edit
+            </div>
+            <div 
+            className="absolute top-2 right-2 bg-black bg-opacity-50 text-white h-8 w-8 flex items-center justify-center rounded-full cursor-pointer font-bold text-sm"
+            onClick={() => setMedia(null)}>
+              X
+            </div>
+          </div>
+        )}
+        {/* preview video  */}
+        {media?.type.includes("video") && previewUrl && (
+          <div className='relative'>
+            <video src={previewUrl} controls />
+            <div 
+            className="absolute top-2 right-2 bg-black bg-opacity-50 text-white h-8 w-8 flex items-center justify-center rounded-full cursor-pointer font-bold text-sm"
+            onClick={() => setMedia(null)}>
+              X
             </div>
           </div>
         )}

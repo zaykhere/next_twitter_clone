@@ -3,7 +3,7 @@ import Image from 'next/image';
 import PostInfo from './PostInfo';
 import PostInteractions from './PostInteractions';
 
-const Post = () => {
+const Post = async () => {
   return (
     <div className='p-4 border-y-[1px] border-borderGray'>
         {/* POST TYPE  */}
