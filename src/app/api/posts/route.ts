@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       },
     };
 
-  const posts = await prisma.post.findMany({ where: whereCondition, take: LIMIT, skip: (Number(page) - 1) * LIMIT, orderBy: {createdAt: 'desc'} });
+  const posts = await prisma.post.findMany({ where: whereCondition, take: LIMIT, skip: (Number(page) - 1) * LIMIT, orderBy: {createdAt: 'desc'}, include: {user: {select: {displayName: true, username: true, img: true}}} });
 
   const totalPosts = await prisma.post.count({where: whereCondition});
 
