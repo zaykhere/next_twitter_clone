@@ -78,7 +78,7 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
         <div className="flex-1 flex flex-col gap-2">
           {/* TOP */}
           <div className="w-full flex justify-between">
-            <Link href={`/${post.user.username}`} className="flex gap-4">
+            <Link href={`/${originalPost.user.username}`} className="flex gap-4">
                 <div
                 className={`${
                   type !== "status" && "hidden"
