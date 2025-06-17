@@ -4,35 +4,10 @@ import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import Video from "./Video";
 import Link from "next/link";
+import { Post as PostType } from "@/generated/prisma";
+import { format } from "timeago.js";
 
-interface FileDetailsResponse {
-  width: number;
-  height: number;
-  filePath: string;
-  url: string;
-  fileType: string;
-  customMetadata?: { sensitive: boolean };
-}
-
-const Post = async ({ type }: { type?: "status" | "comment" }) => {
- 
-  // FETCH POST MEDIA
-
-  // const getFileDetails = async (
-  //   fileId: string
-  // ): Promise<FileDetailsResponse> => {
-  //   return new Promise((resolve, reject) => {
-  //     imagekit.getFileDetails(fileId, function (error, result) {
-  //       if (error) reject(error);
-  //       else resolve(result as FileDetailsResponse);
-  //     });
-  //   });
-  // };
-
-  // const fileDetails = await getFileDetails("675d943be375273f6003858f");
-
-  // console.log(fileDetails);
-
+const Post = ({ type, post }: { type?: "status" | "comment", post: PostType }) => {
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* POST TYPE */}
@@ -89,7 +64,7 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
                   @zainWebDev
                 </span>
                 {type !== "status" && (
-                  <span className="text-textGray">1 day ago</span>
+                  <span className="text-textGray">{format(post.createdAt)}</span>
                 )}
               </div>
             </Link>
@@ -98,10 +73,7 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
           {/* TEXT & MEDIA */}
           <Link href={`/zainWebDev/status/123`}>
             <p className={`${type === "status" && "text-lg"}`}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum,
-              animi. Laborum commodi aliquam alias molestias odio, ab in,
-              reprehenderit excepturi temporibus, ducimus necessitatibus fugiat
-              iure nam voluptas soluta pariatur inventore.
+              {post.desc}
             </p>
           </Link>
           <Image src="/general/post.jpeg" alt="" width={600} height={600} />

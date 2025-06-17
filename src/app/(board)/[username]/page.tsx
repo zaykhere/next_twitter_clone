@@ -1,8 +1,29 @@
 import Feed from "@/components/Feed";
+import { prisma } from "@/prisma";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-const UserPage = () => {
+const UserPage = async ({params}: {
+  params: Promise<{username: string}>
+}) => {
+  const { userId } = await auth();
+  
+  if (!userId) return;
+
+  const username = (await params).username;
+
+  const user = await prisma.user.findUnique({
+    where: { username: username },
+    include: {
+      _count: { select: { followers: true, followings: true } },
+      followings: userId ? { where: { followerId: userId } } : undefined,
+    },
+  });
+
+  if (!user) return notFound();
+
   return (
     <div className="">
       {/* PROFILE TITLE */}
@@ -77,7 +98,7 @@ const UserPage = () => {
         </div>
       </div>
       {/* FEED */}
-      <Feed />
+      <Feed userProfileId={userId} />
     </div>
   );
 };
