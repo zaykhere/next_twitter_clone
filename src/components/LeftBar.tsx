@@ -71,7 +71,7 @@ const LeftBar = () => {
             {/* LOGO MENU BUTTON  */}
             <div className="flex flex-col gap-4 text-lg items-center xxl:items-start">
                 <Link href="/" className="p-2 rounded-full hover:bg-[#181818]">
-                    <Image src="icons/logo.svg" alt="logo" width={24} height={24} loading='eager' />
+                    <Image src="/icons/logo.svg" alt="logo" width={24} height={24} loading='eager' />
                 </Link>
 
                 <div className="flex flex-col gap-3">
