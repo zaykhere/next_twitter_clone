@@ -30,7 +30,26 @@ export async function GET(request: NextRequest) {
       },
     };
 
-  const posts = await prisma.post.findMany({ where: whereCondition, take: LIMIT, skip: (Number(page) - 1) * LIMIT, orderBy: {createdAt: 'desc'}, include: {user: {select: {displayName: true, username: true, img: true}}} });
+    const postIncludeQuery = {
+      user: { select: { displayName: true, username: true, img: true } },
+      _count: { select: { likes: true, rePosts: true, comments: true } },
+      likes: { where: { userId: userId }, select: { id: true } },
+      rePosts: { where: { userId: userId }, select: { id: true } },
+      saves: { where: { userId: userId }, select: { id: true } },
+    };
+
+  const posts = await prisma.post.findMany({ 
+    where: whereCondition, 
+    take: LIMIT, 
+    skip: (Number(page) - 1) * LIMIT, 
+    orderBy: {createdAt: 'desc'}, 
+    include: {
+      rePost: {
+        include: postIncludeQuery,
+      },
+      ...postIncludeQuery,
+    },
+  });
 
   const totalPosts = await prisma.post.count({where: whereCondition});
 
