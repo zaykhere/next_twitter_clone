@@ -1,6 +1,11 @@
+'use client';
+
 import Image from "next/image"
 import Post from "./Post"
 import { Post as PostType } from "@/generated/prisma";
+import { useUser } from "@clerk/nextjs";
+import { useActionState } from "react";
+import { addComment } from "@/action";
 
 type CommentWithDetails = PostType & {
   user: { displayName: string | null; username: string; img: string | null };
@@ -19,15 +24,30 @@ const Comments = ({
   postId: number;
   username: string;
 }) => {
+  const {user, isLoaded, isSignedIn} = useUser();
+
+  const [state, formAction, isPending] = useActionState(addComment, {success: false, error: false});
+
+  console.log({error: state.error})
+
   return (
     <div className=''>
-      <form className='flex items-center justify-between gap-4 p-4 '>
-        <div className='relative w-10 h-10 rounded-full overflow-hidden'>
-          <Image src="/general/avatar.png" alt="ZTD" width={100} height={100} />
-        </div>
-        <input type="text" className="flex-1 bg-transparent outline-none p-2 text-xl" placeholder="Post your reply"/>
-        <button className="py-2 px-4 font-bold bg-white text-black rounded-full">Reply</button>
-      </form>
+      {user && (
+        <form action={formAction} className='flex items-center justify-between gap-4 p-4 '>
+          <div className='relative w-10 h-10 rounded-full overflow-hidden'>
+            <Image src={user?.imageUrl || "/general/avatar.png"} alt="ZTD" width={100} height={100} />
+          </div>
+          <input type="number" name="postId" hidden readOnly value={postId} />
+          <input type="string" name="username" hidden readOnly value={username} />
+          <input type="text" name="desc" className="flex-1 bg-transparent outline-none p-2 text-xl" placeholder="Post your reply" />
+          <button disabled={isPending} className="py-2 px-4 font-bold bg-white text-black rounded-full disabled:cursor-not-allowed cursor-pointer">
+            {isPending ? "Replying..." : "Reply"}
+          </button>
+        </form>
+      )}
+
+      {state.error && (<span className="text-red-300 p-4"> Something went wrong</span>)}
+      
       {comments.map((comment) => (
         <div key={comment.id}>
           <Post post={comment} type="comment" />

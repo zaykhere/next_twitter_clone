@@ -2,6 +2,8 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "./prisma";
+import { z } from "zod/v4";
+import { revalidatePath } from "next/cache";
 
 export const likePost = async (postId: number) => {
   const {userId} = await auth();
@@ -84,5 +86,59 @@ export const savePost = async (postId: number) => {
         postId: postId
       }
     })
+  }
+}
+
+export const addComment = async (prevState: {success: boolean, error: boolean}, formData: FormData) => {
+  const {userId} = await auth();
+
+  if(!userId) return {
+    success: false,
+    error: true
+  }
+
+  const postId = formData.get("postId")
+  const desc = formData.get("desc")
+  const username = formData.get("username");
+
+  const Comment = z.object({
+    parentPostId: z.number(),
+    desc: z.string().max(280)
+  });
+
+  const validatedFields = Comment.safeParse({
+    parentPostId: Number(postId),
+    desc
+  });
+
+  console.log({validatedFields})
+
+  if(!validatedFields.success) {
+    return {
+      success: false,
+      error: true
+    }
+  }
+
+  try {
+    await prisma.post.create({
+      data: {
+        ...validatedFields.data,
+        userId
+      }
+    });
+
+    revalidatePath(`/${username}/status/${postId}`)
+
+    return {
+      success: true,
+      error: false
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: true
+    }
   }
 }

@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '5mb',
     },
   },
+  images: {
+    remotePatterns: [new URL('https://img.clerk.com/**')],
+  },
 };
 
 export default nextConfig;
