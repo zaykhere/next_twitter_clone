@@ -39,12 +39,12 @@ type PostWithDetails = PostType & {
 }
 
 const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetails }) => {
-  const originalPost = post.rePost || post;
+  const originalPost = post?.rePost || post;
 
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* POST TYPE */}
-      {post.rePostId && (
+      {post?.rePostId && (
         <div className="flex items-center gap-2 text-sm text-textGray mb-2 from-bold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -72,20 +72,20 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
             type === "status" && "hidden"
           } relative w-10 h-10 rounded-full overflow-hidden`}
         >
-          <Image src={originalPost.user.img || "/general/avatar.png"} alt="" width={100} height={100}/>
+          <Image src={originalPost?.user?.img || "/general/avatar.png"} alt="" width={100} height={100}/>
         </div>
         {/* CONTENT */}
         <div className="flex-1 flex flex-col gap-2">
           {/* TOP */}
           <div className="w-full flex justify-between">
-            <Link href={`/${originalPost.user.username}`} className="flex gap-4">
+            <Link href={`/${originalPost?.user?.username}`} className="flex gap-4">
                 <div
                 className={`${
                   type !== "status" && "hidden"
                 } relative w-10 h-10 rounded-full overflow-hidden`}
               >
                 <Image
-                  src={originalPost.user.img || "/general/avatar.png"}
+                  src={originalPost?.user?.img || "/general/avatar.png"}
                   alt="profile image"
                   width={100}
                   height={100}
@@ -112,7 +112,7 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
             <PostInfo />
           </div>
           {/* TEXT & MEDIA */}
-          <Link href={`/zainWebDev/status/123`}>
+          <Link href={`/${originalPost.user.username}/status/${originalPost.id}`}>
             <p className={`${type === "status" && "text-lg"}`}>
               {post.desc}
             </p>
