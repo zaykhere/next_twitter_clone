@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
@@ -140,6 +139,7 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
             <span className="text-textGray">{originalPost.createdAt.toDateString()}</span>
           )}
           <PostInteractions 
+            postId={originalPost.id}
             count={originalPost._count} 
             isLiked={!!originalPost.likes.length} 
             isReposted={!!originalPost.rePosts.length}
