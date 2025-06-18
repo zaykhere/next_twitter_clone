@@ -34,7 +34,7 @@ const Feed = async ({userProfileId}: {userProfileId?: string}) => {
         saves: { where: { userId: userId }, select: { id: true } },
       };
 
-  const posts = await prisma.post.findMany(
+  let posts = await prisma.post.findMany(
     {where: whereCondition, 
       take: 3, 
       skip: 0, 
@@ -46,6 +46,19 @@ const Feed = async ({userProfileId}: {userProfileId?: string}) => {
         ...postIncludeQuery,
       },
   });
+
+  if(posts.length === 0) {
+    posts = await prisma.post.findMany({
+      take: 3,
+      orderBy: {createdAt: 'desc'},
+      include: {
+        rePost: {
+          include: postIncludeQuery,
+        },
+        ...postIncludeQuery,
+      },
+    })
+  }
 
   return (
     <div className=''>
