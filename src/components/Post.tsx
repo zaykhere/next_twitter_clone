@@ -116,8 +116,11 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
               {post.desc}
             </p>
           </Link>
-          
-            <Image src={originalPost.img || "/general/post.jpeg"} alt="" width={600} height={post.imgHeight || 600} />
+              
+            {originalPost.img && (
+              <Image src={originalPost.img} alt="post image" width={600} height={post.imgHeight || 600} />
+            )}
+           
           
           
           {/* AFTER FETCHING THE POST MEDIA */}

@@ -93,7 +93,7 @@ const LeftBar = () => {
                 </div>
 
                 {/* BUTTON */}
-                <Link
+                {/* <Link
                     href="/compose/post"
                     className="bg-white text-black rounded-full w-12 h-12 flex items-center justify-center xxl:hidden"
                 >
@@ -104,10 +104,10 @@ const LeftBar = () => {
                     className="hidden xxl:block bg-white text-black rounded-full font-bold py-2 px-20"
                 >
                     Post
-                </Link>
+                </Link> */}
             </div>
             {/* USER  */}
-            <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center justify-between mt-1">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
             <Image src="/general/avatar.png" alt="user avatar" width={100} height={100} />

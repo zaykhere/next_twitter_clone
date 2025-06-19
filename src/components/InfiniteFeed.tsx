@@ -15,8 +15,8 @@ const fetchPosts = async (pageParam: number, userProfileId?: string) => {
 const InfiniteFeed = ({userProfileId}: {userProfileId?: string}) => {
   const {data, error, status, hasNextPage, fetchNextPage} = useInfiniteQuery({
     queryKey: ["posts"], 
-    queryFn: ({pageParam = 2}) => fetchPosts(pageParam, userProfileId),
-    initialPageParam: 2,
+    queryFn: ({pageParam = 1}) => fetchPosts(pageParam, userProfileId),
+    initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => lastPage.hasMore ? pages.length+2 : undefined
   })
 

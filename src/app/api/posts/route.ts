@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   if (!userId) return;
 
   const page = searchParams.get('cursor');
-  const LIMIT = 3;
+  const LIMIT = 10;
 
   const whereCondition = userProfileId && userProfileId !== 'undefined'
     ? { parentPostId: null, userId: userProfileId }
@@ -56,4 +56,43 @@ export async function GET(request: NextRequest) {
   const hasMore = Number(page) * LIMIT < totalPosts;
 
   return NextResponse.json({posts, hasMore});
+}
+
+export async function POST(req: Request) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+
+    const { desc, img, video, imgHeight, isSensitive } = body;
+
+    if (!desc) {
+      return new Response('Invalid input', { status: 400 });
+    }
+
+    const newPost = await prisma.post.create({
+      data: {
+        desc,
+        img,
+        video,
+        imgHeight,
+        isSensitive,
+        userId
+      }
+    })
+
+    // Return a success response
+    return Response.json({
+      success: true,
+      message: 'Post created successfully',
+      data: newPost,
+    });
+  } catch (error: any) {
+    console.error('POST /api/posts error:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
 }

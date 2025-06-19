@@ -62,11 +62,11 @@ const Feed = async ({userProfileId}: {userProfileId?: string}) => {
 
   return (
     <div className=''>
-        {posts?.map((post) => (
+        {/* {posts?.map((post) => (
           <div key={post.id}>
             <Post post={post as any}/>
           </div>
-        ))}
+        ))} */}
         <InfiniteFeed />
     </div>
   )
