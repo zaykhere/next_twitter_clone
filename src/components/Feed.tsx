@@ -67,7 +67,7 @@ const Feed = async ({userProfileId}: {userProfileId?: string}) => {
             <Post post={post as any}/>
           </div>
         ))} */}
-        <InfiniteFeed />
+        <InfiniteFeed userProfileId={userProfileId} />
     </div>
   )
 }
