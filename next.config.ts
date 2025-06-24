@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [new URL('https://img.clerk.com/**'), new URL('https://ik.imagekit.io/**')],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

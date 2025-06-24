@@ -4,8 +4,9 @@ import Image from "next/image"
 import Post from "./Post"
 import { Post as PostType } from "@/generated/prisma";
 import { useUser } from "@clerk/nextjs";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { addComment } from "@/action";
+import { socket } from "@/socket";
 
 type CommentWithDetails = PostType & {
   user: { displayName: string | null; username: string; img: string | null };
@@ -24,17 +25,29 @@ const Comments = ({
   postId: number;
   username: string;
 }) => {
-  const {user, isLoaded, isSignedIn} = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
 
-  const [state, formAction, isPending] = useActionState(addComment, {success: false, error: false});
+  const [state, formAction, isPending] = useActionState(addComment, { success: false, error: false });
 
-  console.log({error: state.error})
+  useEffect(() => {
+    if (state.success && user) {
+      socket.emit("sendNotification", {
+        receiverUsername: username,
+        data: {
+          senderUsername: user.username,
+          type: "comment",
+          link: `/${username}/status/${postId}`
+        }
+      })
+    }
+  }, [state.success, username, user?.username, postId])
+
 
   return (
     <div className=''>
       {user && (
         <form action={formAction} className='flex items-center justify-between gap-4 p-4 '>
-          <div className='relative w-10 h-10 rounded-full overflow-hidden'>
+          <div className='relative w-10 h-10 rounded-full overflow-hidden -z-10'>
             <Image src={user?.imageUrl || "/general/avatar.png"} alt="ZTD" width={100} height={100} />
           </div>
           <input type="number" name="postId" hidden readOnly value={postId} />
@@ -47,7 +60,7 @@ const Comments = ({
       )}
 
       {state.error && (<span className="text-red-300 p-4"> Something went wrong</span>)}
-      
+
       {comments.map((comment) => (
         <div key={comment.id}>
           <Post post={comment} type="comment" />

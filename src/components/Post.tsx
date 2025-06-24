@@ -38,7 +38,10 @@ type PostWithDetails = PostType & {
 }
 
 const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetails }) => {
-  const originalPost = post?.rePost || post;
+  if(!post) return;
+  const originalPost = post.rePostId && post.rePost ? post.rePost : post;
+
+  console.log({originalPost})
 
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
@@ -69,7 +72,7 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
         <div
           className={`${
             type === "status" && "hidden"
-          } relative w-10 h-10 rounded-full overflow-hidden`}
+          } relative w-10 h-10 rounded-full overflow-hidden -z-10`}
         >
           <Image src={originalPost?.user?.img || "/general/avatar.png"} alt="" width={100} height={100}/>
         </div>
@@ -113,7 +116,7 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
           {/* TEXT & MEDIA */}
           <Link href={`/${originalPost.user.username}/status/${originalPost.id}`}>
             <p className={`${type === "status" && "text-lg"}`}>
-              {post.desc}
+              {originalPost.desc}
             </p>
           </Link>
               
@@ -141,7 +144,8 @@ const Post = ({ type, post }: { type?: "status" | "comment", post: PostWithDetai
           {type === "status" && (
             <span className="text-textGray">{originalPost.createdAt.toDateString()}</span>
           )}
-          <PostInteractions 
+          <PostInteractions
+            username={originalPost.user.username}
             postId={originalPost.id}
             count={originalPost._count} 
             isLiked={!!originalPost.likes.length} 
